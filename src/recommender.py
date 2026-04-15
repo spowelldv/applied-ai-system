@@ -129,6 +129,7 @@ def recommend_songs(
     songs: List[Dict],
     k: int = 5,
     weights: Optional[Dict[str, float]] = None,
+    diversify_by_artist: bool = False,
 ) -> List[Tuple[Dict, float, str]]:
     """Score every song, sort descending, return top k with explanations."""
     ranked: List[Tuple[Dict, float, str]] = []
@@ -137,7 +138,22 @@ def recommend_songs(
         explanation = "; ".join(reason_list) if reason_list else "no strong matches"
         ranked.append((song, score, explanation))
     ranked.sort(key=lambda item: item[1], reverse=True)
-    return ranked[:k]
+
+    if not diversify_by_artist:
+        return ranked[:k]
+
+    picked: List[Tuple[Dict, float, str]] = []
+    seen_artists = set()
+    for item in ranked:
+        song = item[0]
+        artist = str(song.get("artist", "")).strip().lower()
+        if artist and artist in seen_artists:
+            continue
+        seen_artists.add(artist)
+        picked.append(item)
+        if len(picked) >= k:
+            break
+    return picked
 
 
 class Recommender:

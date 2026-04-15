@@ -38,7 +38,7 @@ def print_recommendations(title: str, user_prefs: dict, songs: list, k: int = 5,
     print(f"Preferences: {user_prefs}")
     if weights:
         print(f"Custom weights: {weights}")
-    recs = recommend_songs(user_prefs, songs, k=k, weights=weights)
+    recs = recommend_songs(user_prefs, songs, k=k, weights=weights, diversify_by_artist=True)
     print(f"\nTop {k} recommendations:\n")
     for rank, (song, score, explanation) in enumerate(recs, start=1):
         artist = song.get("artist", "?")
