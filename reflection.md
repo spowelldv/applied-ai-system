@@ -1,6 +1,6 @@
 # Reflection: comparing user profiles
 
-These are quick notes comparing the fake listeners in src/main.py. Each bit is just what I expected to change in the top five and why, given the scoring rules.
+These are quick notes comparing the fake listeners in src/main.py. Each bit is just what I expected to change in the top five and why.
 
 ---
 
@@ -12,7 +12,7 @@ Pop with happy mood lines up with bright pop tracks, so you get a lot of easy ma
 
 ## High-energy pop party vs Deep intense rock
 
-Both profiles want a lot of energy, so loud songs can still climb on the energy part of the score. The split is really genre and mood: rock intense should crown different songs than pop happy. If a pop track still sneaks high on the rock list, it is usually energy doing the work without the mood line matching, which is a good reminder to look at the weights.
+Both profiles want a lot of energy, so loud songs can still climb on the energy part of the score. The split is really genre and mood. If a pop track still sneaks high on the rock list, it is usually energy doing the work without the mood matching, which is a good reminder to look at the weights.
 
 ---
 
@@ -24,13 +24,13 @@ These are almost opposite vibes on purpose. Chill lofi wants low energy and soft
 
 ## Deep intense rock vs Edge case: moody but hyper-energetic
 
-Rock intense is one lane. Moody synthwave at very high energy is a narrow lane and there are not many rows like that in the sheet. If random loud rap or metal still floats up, it is probably energy carrying them, which tells you the catalog is small or the energy weight is loud compared to genre mood.
+Rock intense is one lane. Moody synthwave at very high energy is a narrow lane and there are not many rows like that in the sheet. If random loud rap or metal still floats up, it is probably energy carrying them, which tells you the catalog is small or energy is doing too much work.
 
 ---
 
 ## High-energy pop party vs Edge case: moody but hyper-energetic
 
-Happy high-energy pop is a broad radio shape. Moody synthwave at 0.95 energy is a weird specific ask. Synthwave rows will not get the pop genre bump, so the list should reshuffle around what is actually in the file, plus whatever slips in on energy alone. That gap is a good reminder that missing rows in the sheet looks like bad taste even when the code is doing what you told it.
+Happy high-energy pop is a broad radio shape. Moody synthwave at 0.95 energy is a weird specific ask. Synthwave rows will not get the pop genre points, so the list reshuffles around what is actually in the file, plus whatever slips in on energy alone. That is a good reminder that missing rows in the sheet looks like bad taste even when the code is doing what you told it.
 
 ---
 

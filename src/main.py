@@ -1,9 +1,14 @@
 """
-Command line runner for the Music Recommender Simulation.
+Command line runner for the Applied AI System project.
 
-Run: python -m src.main
+Two modes:
+- Demo mode: python -m src.main
+- Assistant mode: python -m src.main --assistant "your question"
 """
 
+import sys
+
+from src.ai_assistant import answer_question
 from src.recommender import load_songs, recommend_songs
 
 PROFILES = [
@@ -50,6 +55,15 @@ def print_recommendations(title: str, user_prefs: dict, songs: list, k: int = 5,
 
 
 def main() -> None:
+    if "--assistant" in sys.argv:
+        idx = sys.argv.index("--assistant")
+        question = " ".join(sys.argv[idx + 1 :]).strip()
+        if not question:
+            print("Missing question after --assistant")
+            return
+        print(answer_question(question, k=5))
+        return
+
     songs = load_songs("data/songs.csv")
 
     for profile in PROFILES:

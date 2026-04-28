@@ -1,14 +1,14 @@
-# Model Card: Music Recommender Simulation
+# Model Card: VibeGuide (Applied AI System)
 
 ## 1. Model Name
 
-VibeRank Classroom 1.0
+VibeGuide 1.0
 
 ---
 
 ## 2. Intended Use
 
-This recommender suggests a small ranked list of songs from a static CSV catalog. It assumes the user can describe their taste with a favorite genre, favorite mood, a target energy level between zero and one, and optionally whether they prefer acoustic textures.
+This system suggests a small ranked list of songs from a static CSV catalog. It also has an assistant mode that answers natural language requests by retrieving context before writing the response.
 
 It is built for classroom exploration and transparency, not for real listeners or production traffic.
 
@@ -18,9 +18,11 @@ Non-intended use: class demo only. It is not a real product, not advice for anyo
 
 ## 3. How the Model Works
 
-The system is intentionally simple and content-based. For each song it looks at metadata only: genre, mood, energy, and acousticness, plus other columns in the file that are not scored yet.
+The system has two layers. The base layer is content based scoring from song metadata (genre, mood, energy, acousticness). The applied AI layer adds retrieval and a generated answer in assistant mode.
 
-The user supplies a short taste profile as a dictionary. The model adds fixed points when the genre matches and when the mood matches. It then adds an energy component that rewards songs whose energy is numerically close to the user target, instead of always preferring higher energy. If the user sets an acoustic preference flag, the score nudges toward higher or lower acousticness.
+In demo mode, the user supplies a short taste profile as a dictionary. The scorer adds fixed points for genre and mood matches, then adds an energy closeness term, and an acoustic nudge when the profile includes that preference.
+
+In assistant mode, the user supplies a natural language request. The system retrieves relevant context from data/notes.txt and from the song sheet, then uses that plus the ranked list to produce the final answer.
 
 To build a playlist-style list, the model scores every song, sorts by the total score from highest to lowest, and returns the top few results. The same math powers a small object-oriented wrapper used by unit tests.
 
@@ -28,7 +30,7 @@ To build a playlist-style list, the model scores every song, sorts by the total 
 
 ## 4. Data
 
-The catalog lives in `data/songs.csv` and currently contains 18 fictional tracks after expanding the starter set with additional genres and moods.
+The catalog lives in data/songs.csv and contains 18 fictional tracks. Assistant mode also uses data/notes.txt.
 
 Represented genres include pop, lofi, rock, ambient, jazz, synthwave, indie pop, metal, blues, country, classical, reggae, rap, folk, and electronic. Moods include happy, chill, intense, relaxed, moody, and focused.
 
@@ -52,22 +54,22 @@ It can feel like a filter bubble because it only recommends what is already in t
 
 ## 7. Evaluation
 
-I tried four hand-written profiles in src/main.py: peppy pop, chill lofi, intense rock, and a weird high-energy moody synthwave case to see if the sheet even has anything that fits.
+I tested four hand-written profiles in demo mode and three natural language prompts in assistant mode.
 
-I stared at the printed top fives and asked if anything felt obviously wrong, like the same winner every time or energy bulldozing genre. I also re-ran the pop profile with softer genre points and stronger energy points to see if the order wiggled. The starter tests in tests/test_recommender.py still pass and they check that explanations are not empty strings.
+For reliability, I kept unit tests (pytest) and added an eval harness script that runs fixed prompts and checks the output includes the expected structure (ranked list with reasons). I also watched for failure cases like the same artist repeating too often, so I added an artist diversity rule in the ranking.
 
 ---
 
 ## 8. Future Work
 
-I would try a simple diversity rule so the top five is not all one artist. I would loosen genre matching so indie pop and pop can talk to each other. If I had time for a second toy dataset, I would fake a few other users and compare that ranking to this pure tag score.
+If I had more time, I would expand the catalog, loosen genre matching so related labels connect, and add a stronger evaluation harness that checks more properties than basic formatting.
 
 ---
 
 ## 9. Personal Reflection
 
-What surprised me is how fast a handful of rules can feel like a recommender even though there is no real listening data and no lyrics.
+What surprised me is how quickly a small system can feel helpful even with a tiny dataset, as long as the output is clear about why it picked something.
 
-I used AI help for some of the typing and layout, but I still ran the program and tests myself because a typo in a weight or a CSV cell can reshuffle the whole list and you would not notice unless you looked.
+I used AI help for some of the structure, but I still ran the program and tests myself because small mistakes can change the ranking and you only notice by checking the output.
 
-If I kept going, I would mock a tiny listening history table and see how different the top five looks compared to this tag-only version.
+One thing I would try next is a fake listening history table so I can compare a collaborative style signal to this content based baseline.

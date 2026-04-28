@@ -1,0 +1,16 @@
+This project is a small class demo.
+
+The system uses a short list of songs in data/songs.csv and a few user preferences.
+
+The rules are simple on purpose.
+
+- Genre match matters a lot.
+- Mood match matters too.
+- Energy is a number from 0 to 1 and we reward closeness to the target.
+- There is an acoustic preference.
+
+Limitations:
+
+- The catalog is small.
+- Genres are exact text matches, so pop and indie pop do not merge.
+- This does not understand lyrics, culture, or real user behavior.

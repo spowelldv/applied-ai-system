@@ -1,0 +1,48 @@
+flowchart LR
+  %% VibeGuide applied AI system diagram
+
+  subgraph UI["User entry points"]
+    U1["Demo mode\npython -m src.main"]
+    U2["Assistant mode\npython -m src.main --assistant \"...\""]
+  end
+
+  subgraph ORCH["Orchestrator"]
+    M["src/main.py\nroutes demo vs assistant"]
+  end
+
+  subgraph CORE["Core recommender"]
+    L0["load_songs\nreads data/songs.csv"]
+    S0["score_song\npoints + energy closeness\nreturns reasons"]
+    R0["recommend_songs\nrank + diversify by artist"]
+  end
+
+  subgraph ASSIST["Assistant layer (RAG-lite)"]
+    P0["parse_prefs_from_text\nextract genre/mood/energy"]
+    RET["retrieve_context\nkeyword overlap\nnotes + songs"]
+    NOTES["data/notes.txt"]
+  end
+
+  subgraph REL["Reliability"]
+    T0["pytest\nunit tests"]
+    EH["scripts/eval_harness.py\n3 fixed prompts\nPASS/FAIL summary"]
+  end
+
+  subgraph OUT["Outputs"]
+    O1["Terminal output\nTop K + Because lines"]
+  end
+
+  U1 --> M
+  U2 --> M
+
+  M --> L0
+  L0 --> R0
+  R0 --> O1
+
+  M --> P0
+  P0 --> R0
+  P0 --> RET
+  RET --> NOTES
+  RET --> O1
+
+  EH --> O1
+  T0 --> O1
